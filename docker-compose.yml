@@ -1,0 +1,25 @@
+version: "2.2"
+services:
+  iris:
+    container_name: aoc2021
+    init: true
+    image: store/intersystems/iris-community:2021.1.0.215.3
+     # If your CPU has >8 cores limit InterSystems IRIS CE to 8 with
+    cpuset: "0-3"
+    volumes:
+      - data:/durable
+      - ./shared:/shared
+      - ./src:/src
+    environment:
+     - ISC_DATA_DIRECTORY=/durable
+    ports:
+     - 9092:52773
+     - 9091:1972
+    #command: --password-file /durable/password/password.txt
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./files/
+      o: bind

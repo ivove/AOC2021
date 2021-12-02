@@ -1,0 +1,6 @@
+[Wed Dec 01 19:04:58.192343 2021] [mpm_worker:notice] [pid 853:tid 139968672298816] AH00292: Apache/2.4.46 (Unix) OpenSSL/1.1.1g configured -- resuming normal operations
+[Wed Dec 01 19:04:58.192503 2021] [core:notice] [pid 853:tid 139968672298816] AH00094: Command line: '/usr/irissys/httpd/bin/httpd -f /durable/httpd/conf/httpd.conf -d /usr/irissys/httpd -c Listen 52773'
+[Wed Dec 01 19:10:42.388557 2021] [core:error] [pid 853:tid 139968672298816] (2)No such file or directory: AH00095: failed to remove PID file /durable/httpd/logs/httpd.pid
+[Wed Dec 01 19:10:42.388782 2021] [mpm_worker:notice] [pid 853:tid 139968672298816] AH00295: caught SIGTERM, shutting down
+[Wed Dec 01 19:11:01.103309 2021] [mpm_worker:notice] [pid 791:tid 140248439527232] AH00292: Apache/2.4.46 (Unix) OpenSSL/1.1.1g configured -- resuming normal operations
+[Wed Dec 01 19:11:01.103477 2021] [core:notice] [pid 791:tid 140248439527232] AH00094: Command line: '/usr/irissys/httpd/bin/httpd -f /durable/httpd/conf/httpd.conf -d /usr/irissys/httpd -c Listen 52773'

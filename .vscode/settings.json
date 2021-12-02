@@ -1,0 +1,21 @@
+{
+    "intersystems.servers": {
+
+        "docker-iris": {
+            "webServer": {
+                "scheme": "http",
+                "host": "127.0.0.1",
+                "port": 9092
+            },
+            "description": "Connection to local InterSystems IRIS™ installed with default settings."
+        },
+        "/default": "docker-iris"
+    },
+    "objectscript.conn": {
+        "active": true,
+        "host": "localhost",
+        "ns": "USER",
+        "server": "docker-iris",
+        "username": "_SYSTEM"
+    }
+}
