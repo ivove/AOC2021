@@ -1,5 +1,5 @@
 /// AOC2021 Day2
-Class AOC.Day2 Extends %RegisteredObject
+Class AOC.Day2 Extends AOC.Base
 {
 
 ClassMethod Part1() As %Integer
