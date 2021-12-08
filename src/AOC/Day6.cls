@@ -6,76 +6,72 @@ Method Part2(numdays As %Integer) As %Integer
 {
     //set days = 80
     While '..File.AtEnd {
-        set line = $TRANSLATE(..File.ReadLine(),$c(13),"")
-        set len = $LENGTH(line,",")
-        set fish = len
-        for i=1:1:len{
-            set fish(i)=$PIECE(line,",",i)
+        Set line = $TRANSLATE(..File.ReadLine(),$CHAR(13),"")
+        Set len = $LENGTH(line,",")
+        Set fish = len
+        For i=1:1:len{
+            Set age = $PIECE(line,",",i)
+            Set fish(age)=$GET(fish(age))+1
         }
     }
-    for f=1:1:fish {
-        set age = fish(f)
-        set days(1,age)=$GET(days(1,age)) + 1
+    ZWrite fish
+    For d=1:1:numdays {
+        Set a0 = $GET(fish(0))
+        Set a1 = $GET(fish(1))
+        Set a2 = $GET(fish(2))
+        Set a3 = $GET(fish(3))
+        Set a4 = $GET(fish(4))
+        Set a5 = $GET(fish(5))
+        Set a6 = $GET(fish(6))
+        Set a7 = $GET(fish(7))
+        Set a8 = $GET(fish(8))
+        Set fish(8)=a0
+        Set fish(7)=a8
+        Set fish(6)=a7+a0
+        Set fish(5)=a6
+        Set fish(4)=a5
+        Set fish(3)=a4
+        Set fish(2)=a3
+        Set fish(1)=a2
+        Set fish(0)=a1
+        
     }
-    set day = 1
-    while day'="",day < (numdays+1) {
-        w day,!
-        set age = $ORDER(days(day,""))
-        while  age '= "" {
-            set next = age + 3
-            set days(day+next,6) = $GET(days(day+next,6)) + days(day,age)
-            set xdat = day + next
-            while xdat < numdays {
-                set fish = fish + days(day,age)
-                set days(xdat,6) = $GET(days(xdat+next,6)) + days(day,age)
-                set xdat = xdat + 7
-            }
-            set age = $ORDER(days(day,age))
-        }
-        set day = $ORDER(days(day))
-    }
-    zw days
-    set x = 0
-    set a = $ORDER(days(""))
-    while a '= "", a <= numdays {
-        set b = $ORDER(days(a,""),1,val)
-        while b '= "" {
-            set x = x + val
-            set b =$ORDER(days(a,b),1,val)
-        }
-        set a = $ORDER(days(a))
-    }
-    return x
+    ZWrite fish
+   Set x=0
+   For i=0:1:8 {
+       Set x=x+fish(i)
+   }
+    Return x
 }
 
 Method Part1(days As %Integer) As %Integer
 {
     //set days = 80
     While '..File.AtEnd {
-        set line = $TRANSLATE(..File.ReadLine(),$c(13),"")
-        set len = $LENGTH(line,",")
-        set ^||fish = len
-        for i=1:1:len{
-            set ^||fish(i)=$PIECE(line,",",i)
+        Set line = $TRANSLATE(..File.ReadLine(),$CHAR(13),"")
+        Set len = $LENGTH(line,",")
+        Set ^||fish = len
+        For i=1:1:len{
+            Set ^||fish(i)=$PIECE(line,",",i)
         }
     }
-    for d=1:1:days {
-        set new = 0
-        for f=1:1:^||fish {
-            set age = ^||fish(f)
-            set age = age - 1
-            if age < 0 { 
-                set age = 6
-                set new = new + 1
+    For d=1:1:days {
+        Set new = 0
+        For f=1:1:^||fish {
+            Set age = ^||fish(f)
+            Set age = age - 1
+            If age < 0 { 
+                Set age = 6
+                Set new = new + 1
             }
-            set ^||fish(f) = age
+            Set ^||fish(f) = age
         }
-        for i=1:1:new {
-            set ^||fish = ^||fish + 1
-            set ^||fish(^||fish) = 8
+        For i=1:1:new {
+            Set ^||fish = ^||fish + 1
+            Set ^||fish(^||fish) = 8
         }
     }
-    return fish
+    Return fish
 }
 
 }
