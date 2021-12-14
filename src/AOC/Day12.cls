@@ -19,17 +19,18 @@ Method Part1() As %Integer
 
 Method Part2() As %Integer
 {
-    while '..TestFile.AtEnd {
-        set line = $TRANSLATE(..TestFile.ReadLine(),$CHAR(13),"")
+    while '..File.AtEnd {
+        set line = $TRANSLATE(..File.ReadLine(),$CHAR(13),"")
         set from = $PIECE(line,"-",1)
         set to = $PIECE(line,"-",2)
         if '..isUpper(from),from'="start",from'="end" { set small(from) = "" }
-        if '..isUpper(to),from'="start",from'="end" { set small(to) = "" }
+        if '..isUpper(to),to'="start",to'="end" { set small(to) = "" }
         set map(from,to) = ""
         set map(to,from) = ""
     }
     set s = $ORDER(small(""))
     while s '= "" {
+        k nmap
         merge nmap = map
         set f = $ORDER(nmap(""))
         while f '= "" {
@@ -45,8 +46,9 @@ Method Part2() As %Integer
         set s = $ORDER(small(s))
     }  
     for i = 1:1:paths {
-        set xp(paths(i))=""
+        set xp($TRANSLATE(paths(i),"1",""))=""
     }  
+    //zw xp
     set result = 0
     set p = $ORDER(xp(""))
     while p '= "" {
