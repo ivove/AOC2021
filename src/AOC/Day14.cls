@@ -153,4 +153,54 @@ Method Part2(steps As %Integer) As %Integer
     return max-min
 }
 
+Method Part2v2(steps As %Integer) As %Integer
+{
+    set result = 0
+    set template = $TRANSLATE(..File.ReadLine(),$CHAR(13),"")
+    do ..File.ReadLine()
+    while '..File.AtEnd {
+        set line = $TRANSLATE(..File.ReadLine(),$CHAR(13)_" -","")
+        set from = $PIECE(line,">",1)
+        set to = $PIECE(line,">",2)
+        set sub(from)=to
+    }
+    set len = $LENGTH(template)
+    for i=1:1:len-1 {
+        set pair = $EXTRACT(template,i,i+1)
+        set pairs(pair) = $GET(pairs(pair)) + 1
+    }
+    for s=1:1:steps {
+        set pair = $ORDER(pairs(""),1,val)
+        k npairs
+        while pair'="" {
+            set insert = sub(pair)
+            set p1 = $EXTRACT(pair,1)_insert
+            set p2 = insert_$EXTRACT(pair,2)
+            set npairs(p1) = $GET(npairs(p1)) + val
+            set npairs(p2) = $GET(npairs(p2)) + val
+            set pair = $ORDER(pairs(pair),1,val)
+        }
+        k pairs
+        m pairs = npairs
+    }
+    set min = 99999999999999999999999999999999
+    set max = 0
+    set pair = $ORDER(pairs(""),1,val)
+    while pair'="" {
+        set l($EXTRACT(pair,1)) = $GET(l($EXTRACT(pair,1))) + val
+        set pair = $ORDER(pairs(pair),1,val)
+    }
+    set l($EXTRACT(template,*)) = $GET(l($EXTRACT(template,*)))+1
+    set c = $ORDER(l(""),1,val)
+    while c'="" {         
+        if val>max { set max = val }
+        if val<min { set min = val }
+        set c= $ORDER(l(c),1,val)
+    }
+    w max," - ",min,!
+    //zw l
+    //zw pairs
+    return max-min
+}
+
 }
