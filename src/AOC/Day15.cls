@@ -113,6 +113,67 @@ Method Part1v2() As %Integer
     return ($LIST(map(endx,endy),2) - $LIST(map(1,1),1))
 }
 
+Method Part1v3() As %Integer
+{
+    set y = 1
+    while '..File.AtEnd {
+        set line = $TRANSLATE(..File.ReadLine(),$CHAR(13),"")
+        set len = $LENGTH(line)
+        set endx = len
+        for x=1:1:len {
+            set map(x,y) = $LISTBUILD($EXTRACT(line,x),-1,0)
+        }
+        set y = y + 1
+    }
+    set endy = y-1
+
+    set x = $ORDER(map(""))
+    while x '= "" {
+        set y = $ORDER(map(x,""))
+        while y '= "" {
+            set guess = (endx - x) + (endy - y)
+            set $LIST(map(x,y),3) = guess
+            set y = $ORDER(map(x,y))
+        }
+        set x = $ORDER(map(x))
+    }
+
+    set que(1,1) = $LISTBUILD(1,1)
+    set $LI(map(1,1),2) = +$LI(map(1,1),1)
+    set gc = 1
+    while $DATA(que) {
+        set g = $ORDER(que(""))
+        set c = $ORDER(que(g,""))
+        set coord = que(g,c)
+        //zw coord
+        kill que(g,c)
+        set x = $LI(coord,1),y=$LI(coord,2)
+        do ..Eval(x,y,x+1,y,.map,.gc,.que,endx,endy)
+        do ..Eval(x,y,x-1,y,.map,.gc,.que,endx,endy)
+        do ..Eval(x,y,x,y+1,.map,.gc,.que,endx,endy)
+        do ..Eval(x,y,x,y-1,.map,.gc,.que,endx,endy)
+        //zw que
+    }
+    zw map
+    return ($LIST(map(endx,endy),2) - $LIST(map(1,1),1))
+}
+
+Method Eval(x, y, nx, ny, map, gc, que, endx, endy)
+{
+    if $DATA(map(nx,ny)) {
+        if $LIST(map(nx,ny),2) = -1 {
+            set gc = gc + 1
+            set que($LIST(map(nx,ny),3)+$LIST(map(x,y),2),gc) = $LISTBUILD(nx,ny)
+            set $LIST(map(nx,ny),2) = $LIST(map(x,y),2) + $LIST(map(nx,ny),1) 
+        } elseif ($LIST(map(x,y),2) + $LIST(map(nx,ny),1)) < $LIST(map(nx,ny),2) {
+            set gc = gc + 1
+            set que($LIST(map(nx,ny),3)+$LIST(map(x,y),2),gc) = $LISTBUILD(nx,ny)
+            set $LIST(map(nx,ny),2) = $LIST(map(x,y),2) + $LIST(map(nx,ny),1) 
+        }
+    }
+    //if nx=endx,ny=endy { kill que }
+}
+
 Method go(map, x, y, endy, endx, currentPath, risk, paths)
 {
     set coord = x_"."_y
@@ -157,6 +218,72 @@ Method getRisk(path, map)
         set r = r + map(x,y)
     }
     return r
+}
+
+Method Part2() As %Integer
+{
+     set y = 1
+    while '..File.AtEnd {
+        set line = $TRANSLATE(..File.ReadLine(),$CHAR(13),"")
+        set len = $LENGTH(line)
+        set endx = len
+        for x=1:1:len {
+            set map(x,y) = $LISTBUILD($EXTRACT(line,x),-1,0)
+        }
+        set y = y + 1
+    }
+    set endy = y-1
+    do ..ExpandMap(.map,endx,endy)
+    set endx = endx * 5
+    set endy = endy * 5
+    set x = $ORDER(map(""))
+    while x '= "" {
+        set y = $ORDER(map(x,""))
+        while y '= "" {
+            set guess = (endx - x) + (endy - y)
+            set $LIST(map(x,y),3) = guess
+            set y = $ORDER(map(x,y))
+        }
+        set x = $ORDER(map(x))
+    }
+
+    set que(1,1) = $LISTBUILD(1,1)
+    set $LI(map(1,1),2) = +$LI(map(1,1),1)
+    set gc = 1
+    while $DATA(que) {
+        set g = $ORDER(que(""))
+        set c = $ORDER(que(g,""))
+        set coord = que(g,c)
+        //zw coord
+        kill que(g,c)
+        set x = $LI(coord,1),y=$LI(coord,2)
+        do ..Eval(x,y,x+1,y,.map,.gc,.que,endx,endy)
+        do ..Eval(x,y,x-1,y,.map,.gc,.que,endx,endy)
+        do ..Eval(x,y,x,y+1,.map,.gc,.que,endx,endy)
+        do ..Eval(x,y,x,y-1,.map,.gc,.que,endx,endy)
+        //zw que
+    }
+    //zw map
+    return ($LIST(map(endx,endy),2) - $LIST(map(1,1),1))
+}
+
+Method ExpandMap(map, endx, endy)
+{
+    for i=0:1:4 {
+        for j=0:1:4 {
+            for x=1:1:endx {
+                for y=1:1:endy {
+                    if '((i=0)&&(j=0)) {
+                        set nx = x+(i*endx)
+                        set ny = y+(j*endy)
+                        set nval = $LIST(map(x,y),1) + j + i
+                        if nval >= 10 { set nval = nval-9 }
+                        set map(nx,ny) = $LISTBUILD(nval,-1,0)
+                    }
+                }
+            }
+        }
+    }
 }
 
 }
