@@ -24,17 +24,93 @@ Method Part1() As %Integer
     }
     //w risk,!,!
     set cont = 1
-    set risk = endx+endy
-    while cont {
+    set risk = (endx+endy)*9
+    //while cont {
         do ..go(.map,1,1,endy,endx,"/",.risk,.p)
-        if $data(p) { set cont = 0 }
-        else { set risk = risk + 1 }
-        zw p
-        w risk,*9,cont,!
-    }
+        //if $data(p) { set cont = 0 }
+        //else { set risk = risk + 1 }
+        //zw p
+        //w risk,*9,cont,!
+    //}
 
     
     return risk - map(1,1)
+}
+
+Method Part1v2() As %Integer
+{
+    set y = 1
+    while '..File.AtEnd {
+        set line = $TRANSLATE(..File.ReadLine(),$CHAR(13),"")
+        set len = $LENGTH(line)
+        set endx = len
+        for x=1:1:len {
+            set map(x,y) = $LISTBUILD($EXTRACT(line,x),-1)
+        }
+        set y = y + 1
+    }
+    set endy = y-1
+    set que(1) = $LISTBUILD(1,1)
+    set $LI(map(1,1),2) = +$LI(map(1,1),1)
+    while $DATA(que) {
+        set c = $ORDER(que(""),-1)
+        set coord = que(c)
+        //zw coord
+        kill que(c)
+        set x = $LI(coord,1),y=$LI(coord,2)
+        if $DATA(map(x+1,y)) {
+            if $LIST(map(x+1,y),2) = -1 {
+                set c = c + 1
+                set que(c) = $LISTBUILD(x+1,y)
+                set $LIST(map(x+1,y),2) = $LIST(map(x,y),2) + $LIST(map(x+1,y),1) 
+            } elseif ($LIST(map(x,y),2) + $LIST(map(x+1,y),1)) < $LIST(map(x+1,y),2) {
+                set c = c + 1
+                set que(c) = $LISTBUILD(x+1,y)
+                set $LIST(map(x+1,y),2) = $LIST(map(x,y),2) + $LIST(map(x+1,y),1) 
+            }
+        }
+        if $DATA(map(x-1,y)) {
+            if $LIST(map(x-1,y),2) = -1 {
+                set c = c + 1
+                set que(c) = $LISTBUILD(x-1,y)
+                set $LIST(map(x-1,y),2) = $LIST(map(x,y),2) + $LIST(map(x-1,y),1) 
+            } elseif ($LIST(map(x,y),2) + $LIST(map(x-1,y),1)) < $LIST(map(x-1,y),2) {
+                set c = c + 1
+                set que(c) = $LISTBUILD(x-1,y)
+                set $LIST(map(x-1,y),2) = $LIST(map(x,y),2) + $LIST(map(x-1,y),1) 
+            }
+        }
+        if $DATA(map(x,y+1)) {
+            if $LIST(map(x,y+1),2) = -1 {
+                set c = c + 1
+                set que(c) = $LISTBUILD(x,y+1)
+                set $LIST(map(x,y+1),2) = $LIST(map(x,y),2) + $LIST(map(x,y+1),1) 
+            } elseif ($LIST(map(x,y),2) + $LIST(map(x,y+1),1)) < $LIST(map(x,y+1),2) {
+                if x=1,(y+1)=3
+                {
+                    w $LIST(map(x,y+1),2),!,($LIST(map(x,y),2) + $LIST(map(x,y+1),1)),!
+                    r xx
+                }
+                set c = c + 1
+                set que(c) = $LISTBUILD(x,y+1)
+                set $LIST(map(x,y+1),2) = $LIST(map(x,y),2) + $LIST(map(x,y+1),1) 
+            }
+        }
+        if $DATA(map(x,y-1)) {
+            if $LIST(map(x,y-1),2) = -1 {
+                set c = c + 1
+                set que(c) = $LISTBUILD(x,y-1)
+                set $LIST(map(x,y-1),2) = $LIST(map(x,y),2) + $LIST(map(x,y-1),1) 
+            } elseif ($LIST(map(x,y),2) + $LIST(map(x,y-1),1)) < $LIST(map(x,y-1),2) {
+                set c = c + 1
+                set que(c) = $LISTBUILD(x,y-1)
+                set $LIST(map(x,y-1),2) = $LIST(map(x,y),2) + $LIST(map(x,y-1),1) 
+            }
+        }
+        //zw que
+    }
+    zw map
+    return ($LIST(map(endx,endy),2) - $LIST(map(1,1),1))
 }
 
 Method go(map, x, y, endy, endx, currentPath, risk, paths)
@@ -48,6 +124,7 @@ Method go(map, x, y, endy, endx, currentPath, risk, paths)
             //w !,r,!,currentPath,!
             if r < risk { 
                 set risk = r 
+                write risk,!
                 set paths(currentPath) = r
             }
         } else {
