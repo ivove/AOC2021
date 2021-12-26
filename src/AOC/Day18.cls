@@ -4,13 +4,37 @@ Class AOC.Day18 Extends AOC.Base
 
 Method Part1() As %Integer
 {
-    set sum = $TRANSLATE(..TestFile.ReadLine(),$CHAR(13),"")
-    while '..TestFile.AtEnd {
-        set line = $TRANSLATE(..TestFile.ReadLine(),$CHAR(13),"")
+    set sum = $TRANSLATE(..File.ReadLine(),$CHAR(13),"")
+    while '..File.AtEnd {
+        set line = $TRANSLATE(..File.ReadLine(),$CHAR(13),"")
         set sum = ..Add(sum,line)
         set sum = ..Reduce(sum)
     }
     return ..Magnitude(sum)
+}
+
+Method Part2() As %Integer
+{
+    set max = 0
+    set i = 0
+    while '..File.AtEnd {
+        set line = $TRANSLATE(..File.ReadLine(),$CHAR(13),"")
+        set i = i + 1
+        set numbers(i) = line
+    }
+
+    for a=1:1:i {
+        for b=1:1:i {
+            if a '= b {
+                set sum = ..Add(numbers(a),numbers(b))
+                set sum = ..Reduce(sum)
+                set mag = ..Magnitude(sum)
+                if mag > max { set max = mag }
+            }
+        }
+    }
+
+    return max
 }
 
 Method Reduce(str As %String) As %String
@@ -19,9 +43,9 @@ Method Reduce(str As %String) As %String
     while cont {
         set num = 0
         set str = ..Explode(str,.num)
-        w "exp",*9,str,!
+        //w "exp",*9,str,!
         set str = ..Split(str,.num)
-        w "spl",*9,str,!
+        //w "spl",*9,str,!
         if num = 0 { set cont = 0 }
     }
     return str
@@ -60,9 +84,9 @@ Method Explode(str As %String, ByRef number As %String) As %String
             while xpos < $LENGTH(second),fnd=0 {
                 set t = $EXTRACT(second,xpos)
                 if t?1N {
-                    if $EXTRACT(second,xpos+1)?1N { set t = $EXTRACT(second,xpos+1)_t }
+                    if $EXTRACT(second,xpos+1)?1N { set t = t_$EXTRACT(second,xpos+1) }
                     set nt = t + b
-                    set second = $EXTRACT(second,1,xpos-$LENGTH(t))_nt_$EXTRACT(second,xpos+1,*)
+                    set second = $EXTRACT(second,1,xpos-1)_nt_$EXTRACT(second,xpos+$LENGTH(t),*)
                     set fnd = 1
                 }
                 set xpos = xpos + 1
